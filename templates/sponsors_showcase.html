@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Sponsors - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary mb-3">
+                <i class="fas fa-handshake me-3"></i>Featured Sponsors
+            </h1>
+            <p class="lead text-muted mb-4">
+                Discover amazing companies ready to support your student events and initiatives
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <p class="text-muted">
+                        These sponsors are actively looking for partnership opportunities with student clubs. 
+                        Each sponsor has specific interests and requirements - find the perfect match for your event!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action for Clubs -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center py-4">
+                    <h3 class="card-title mb-3">
+                        <i class="fas fa-users me-2"></i>Are you a student club looking for sponsors?
+                    </h3>
+                    <p class="card-text mb-4">
+                        Join SponsorSync to create your event profile and get AI-powered sponsor recommendations!
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Join as Club
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sponsors Grid -->
+    <div class="row">
+        {% for sponsor in sponsors %}
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-transparent border-bottom-0 pt-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-primary rounded-circle p-2 me-3">
+                            <i class="fas fa-building text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-1">{{ sponsor.company_name }}</h5>
+                            <small class="text-muted">{{ sponsor.industry }}</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Location -->
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                        <span class="text-muted">{{ sponsor.location }}</span>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="card-text text-muted mb-3">{{ sponsor.description }}</p>
+
+                    <!-- Budget Range -->
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-success mb-2">
+                            <i class="fas fa-dollar-sign me-2"></i>Budget Range
+                        </h6>
+                        <span class="badge bg-success">{{ sponsor.budget_range }}</span>
+                    </div>
+
+                    <!-- Target Demographics -->
+                    <div class="mb-3">
+                        <h6 class="fw-bold mb-2">
+                            <i class="fas fa-users me-2"></i>Target Audience
+                        </h6>
+                        <p class="small text-muted">{{ sponsor.target_demographics }}</p>
+                    </div>
+
+                    <!-- Sponsorship Interests -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-2">
+                            <i class="fas fa-star me-2"></i>Interested In
+                        </h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for interest in sponsor.sponsorship_interests %}
+                            <span class="badge bg-secondary small">{{ interest }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="card-footer bg-transparent border-top">
+                    <div class="row g-2 mb-3">
+                        <div class="col-12">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-user me-2"></i>{{ sponsor.contact_person }}
+                            </small>
+                        </div>
+                        <div class="col-12">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-phone me-2"></i>{{ sponsor.phone }}
+                            </small>
+                        </div>
+                        {% if sponsor.website %}
+                        <div class="col-12">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-globe me-2"></i>
+                                <a href="{{ sponsor.website }}" target="_blank" class="text-decoration-none">
+                                    Visit Website
+                                </a>
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Connect Buttons -->
+                    <div class="d-grid gap-2">
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.user_type == 'club' %}
+                                <button class="btn btn-primary btn-sm" onclick="connectToSponsor('{{ sponsor.company_name }}')">
+                                    <i class="fas fa-handshake me-2"></i>Connect
+                                </button>
+                            {% else %}
+                                <span class="text-muted text-center small">
+                                    <i class="fas fa-info-circle me-1"></i>Connect feature available for clubs
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-user-plus me-2"></i>Join to Connect
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Bottom Call to Action -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center py-5">
+                    <h3 class="mb-3">
+                        <i class="fas fa-rocket me-2 text-primary"></i>Ready to Find Your Perfect Sponsor?
+                    </h3>
+                    <p class="text-muted mb-4">
+                        SponsorSync uses AI to match your events with the most suitable sponsors based on 
+                        audience demographics, event themes, and engagement potential.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-magic me-2"></i>Get AI Recommendations
+                        </a>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-home me-2"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function connectToSponsor(sponsorName) {
+    // Simple alert for demo - in real app this would open a messaging modal
+    alert('This feature will send a connection request to ' + sponsorName + '. Please login and complete your club profile to use messaging features.');
+    
+    // Redirect to profile if not completed
+    window.location.href = "{{ url_for('login') }}";
+}
+</script>
+{% endblock %}

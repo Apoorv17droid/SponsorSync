@@ -444,6 +444,105 @@ def express_interest(event_id):
     
     return redirect(url_for('event_details', event_id=event_id))
 
+@app.route('/sponsors')
+def sponsors_showcase():
+    """Public page showing sample sponsors with their requirements"""
+    # Get sample sponsors from the database or create sample data
+    sponsors = SponsorProfile.query.limit(10).all()
+    
+    # If no sponsors in database, create sample data for display
+    if not sponsors:
+        sponsors = [
+            {
+                'company_name': 'TechCorp Innovation',
+                'industry': 'Technology',
+                'location': 'San Francisco, CA',
+                'description': 'Leading technology company specializing in AI and machine learning solutions. We support student innovation and tech entrepreneurship.',
+                'website': 'https://techcorp.example.com',
+                'budget_range': '$10,000 - $50,000',
+                'target_demographics': 'Computer Science students, Engineering students, Tech enthusiasts',
+                'contact_person': 'Sarah Johnson',
+                'phone': '+1 (555) 123-4567',
+                'sponsorship_interests': ['Tech Hackathons', 'AI/ML Workshops', 'Career Fairs', 'Innovation Competitions']
+            },
+            {
+                'company_name': 'Green Future Energy',
+                'industry': 'Renewable Energy',
+                'location': 'Austin, TX',
+                'description': 'Sustainable energy company committed to environmental education and green technology advancement.',
+                'website': 'https://greenfuture.example.com',
+                'budget_range': '$5,000 - $25,000',
+                'target_demographics': 'Environmental Science students, Engineering students, Sustainability advocates',
+                'contact_person': 'Michael Chen',
+                'phone': '+1 (555) 234-5678',
+                'sponsorship_interests': ['Environmental Fairs', 'Clean Tech Competitions', 'Sustainability Workshops', 'Green Innovation Events']
+            },
+            {
+                'company_name': 'FinanceFirst Solutions',
+                'industry': 'Financial Services',
+                'location': 'New York, NY',
+                'description': 'Premier financial services firm offering banking, investment, and fintech solutions. We invest in future financial leaders.',
+                'website': 'https://financefirst.example.com',
+                'budget_range': '$15,000 - $75,000',
+                'target_demographics': 'Business students, Economics majors, Finance enthusiasts',
+                'contact_person': 'Emily Rodriguez',
+                'phone': '+1 (555) 345-6789',
+                'sponsorship_interests': ['Business Plan Competitions', 'Finance Workshops', 'Entrepreneurship Events', 'Career Networking']
+            },
+            {
+                'company_name': 'HealthTech Innovations',
+                'industry': 'Healthcare Technology',
+                'location': 'Boston, MA',
+                'description': 'Healthcare technology company developing cutting-edge medical devices and digital health solutions.',
+                'website': 'https://healthtech.example.com',
+                'budget_range': '$8,000 - $40,000',
+                'target_demographics': 'Pre-med students, Biomedical Engineering students, Health Science majors',
+                'contact_person': 'Dr. James Park',
+                'phone': '+1 (555) 456-7890',
+                'sponsorship_interests': ['Medical Innovation Fairs', 'Health Tech Hackathons', 'Research Symposiums', 'Medical Device Competitions']
+            },
+            {
+                'company_name': 'EduConnect Learning',
+                'industry': 'Education Technology',
+                'location': 'Seattle, WA',
+                'description': 'Educational technology platform transforming online learning experiences for students worldwide.',
+                'website': 'https://educonnect.example.com',
+                'budget_range': '$3,000 - $20,000',
+                'target_demographics': 'Education majors, Computer Science students, Learning enthusiasts',
+                'contact_person': 'Lisa Thompson',
+                'phone': '+1 (555) 567-8901',
+                'sponsorship_interests': ['EdTech Competitions', 'Learning Innovation Workshops', 'Student Teaching Events', 'Educational Research Conferences']
+            },
+            {
+                'company_name': 'SportsTech Dynamics',
+                'industry': 'Sports Technology',
+                'location': 'Denver, CO',
+                'description': 'Sports technology company creating innovative solutions for athlete performance and fan engagement.',
+                'website': 'https://sportstech.example.com',
+                'budget_range': '$5,000 - $30,000',
+                'target_demographics': 'Sports Management students, Athletic teams, Fitness enthusiasts',
+                'contact_person': 'Ryan Martinez',
+                'phone': '+1 (555) 678-9012',
+                'sponsorship_interests': ['Sports Innovation Competitions', 'Athletic Events', 'Fitness Challenges', 'Sports Analytics Workshops']
+            }
+        ]
+    else:
+        # Convert database objects to dict format for consistent template handling
+        sponsors = [{
+            'company_name': s.company_name,
+            'industry': s.industry,
+            'location': s.location,
+            'description': s.description,
+            'website': s.website,
+            'budget_range': s.budget_range,
+            'target_demographics': s.target_demographics,
+            'contact_person': s.contact_person,
+            'phone': s.phone,
+            'sponsorship_interests': ['Custom sponsorship opportunities based on your needs']
+        } for s in sponsors]
+    
+    return render_template('sponsors_showcase.html', sponsors=sponsors)
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404
