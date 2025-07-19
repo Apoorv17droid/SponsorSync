@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.name }} - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Event Details Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-calendar-alt text-primary me-2"></i>
+                    {{ event.name }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <!-- Event Info -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-users me-2"></i>Organized by:</strong> {{ event.club.club_name }}</p>
+                        <p><strong><i class="fas fa-university me-2"></i>University:</strong> {{ event.club.university }}</p>
+                        <p><strong><i class="fas fa-calendar me-2"></i>Date:</strong> 
+                            {% if event.event_date %}{{ event.event_date.strftime('%B %d, %Y') }}{% else %}Date TBD{% endif %}
+                        </p>
+                        <p><strong><i class="fas fa-map-marker-alt me-2"></i>Location:</strong> {{ event.location or 'Location TBD' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        {% if event.theme %}
+                            <p><strong><i class="fas fa-tag me-2"></i>Theme:</strong> {{ event.theme }}</p>
+                        {% endif %}
+                        {% if event.expected_footfall %}
+                            <p><strong><i class="fas fa-eye me-2"></i>Expected Attendees:</strong> {{ event.expected_footfall }}</p>
+                        {% endif %}
+                        {% if event.target_audience %}
+                            <p><strong><i class="fas fa-bullseye me-2"></i>Target Audience:</strong> {{ event.target_audience }}</p>
+                        {% endif %}
+                        <p><strong><i class="fas fa-clock me-2"></i>Posted:</strong> {{ event.created_at.strftime('%B %d, %Y') }}</p>
+                    </div>
+                </div>
+                
+                <!-- Event Description -->
+                {% if event.description %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-info-circle me-2"></i>Event Description</h5>
+                        <p>{{ event.description }}</p>
+                    </div>
+                {% endif %}
+                
+                <!-- Sponsor Requirements -->
+                {% if event.sponsor_requirements %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-handshake me-2"></i>Sponsor Requirements</h5>
+                        <p>{{ event.sponsor_requirements }}</p>
+                    </div>
+                {% endif %}
+                
+                <!-- Requirements Breakdown -->
+                <div class="row mb-4">
+                    {% if event.monetary_requirement %}
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-dollar-sign fa-2x text-success mb-2"></i>
+                                    <h6>Monetary</h6>
+                                    <p class="small">{{ event.monetary_requirement }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if event.material_requirement %}
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-box fa-2x text-info mb-2"></i>
+                                    <h6>Material</h6>
+                                    <p class="small">{{ event.material_requirement }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if event.marketing_requirement %}
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-bullhorn fa-2x text-warning mb-2"></i>
+                                    <h6>Marketing</h6>
+                                    <p class="small">{{ event.marketing_requirement }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Past Engagement Stats -->
+                {% if event.past_engagement_stats %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-chart-line me-2"></i>Past Engagement Statistics</h5>
+                        <p>{{ event.past_engagement_stats }}</p>
+                    </div>
+                {% endif %}
+                
+                <!-- Tags -->
+                {% if event.tags %}
+                    <div class="mb-4">
+                        <h6><i class="fas fa-tags me-2"></i>Tags</h6>
+                        {% set tags = event.tags.split(',') %}
+                        {% for tag in tags %}
+                            <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    {% if current_user.user_type == 'sponsor' %}
+                        <a href="{{ url_for('express_interest', event_id=event.id) }}" class="btn btn-success">
+                            <i class="fas fa-heart me-2"></i>Express Interest
+                        </a>
+                        <a href="{{ url_for('send_message', recipient_id=event.club.user.id) }}" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i>Contact Organizer
+                        </a>
+                    {% elif current_user.user_type == 'club' and current_user.club_profile and current_user.club_profile.id == event.club_id %}
+                        <a href="{{ url_for('create_event') }}" class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>Edit Event
+                        </a>
+                    {% endif %}
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Club Info Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Organizer Info
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>{{ event.club.club_name }}</h6>
+                <p class="text-muted">{{ event.club.university }}</p>
+                <p><strong>Location:</strong> {{ event.club.location }}</p>
+                
+                {% if event.club.description %}
+                    <p><strong>About:</strong> {{ event.club.description }}</p>
+                {% endif %}
+                
+                {% if event.club.contact_person %}
+                    <p><strong>Contact:</strong> {{ event.club.contact_person }}</p>
+                {% endif %}
+                
+                {% if event.club.phone %}
+                    <p><strong>Phone:</strong> {{ event.club.phone }}</p>
+                {% endif %}
+                
+                {% if current_user.user_type == 'sponsor' %}
+                    <a href="{{ url_for('send_message', recipient_id=event.club.user.id) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-envelope me-1"></i>Send Message
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- AI Match Score (for sponsors) -->
+        {% if current_user.user_type == 'sponsor' and recommendations %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-brain text-primary me-2"></i>
+                        AI Match Analysis
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="display-4 text-primary">{{ recommendations.percentage }}%</div>
+                        <p class="text-muted">Match Score</p>
+                    </div>
+                    
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: {{ recommendations.percentage }}%"></div>
+                    </div>
+                    
+                    <h6>Why this is a good match:</h6>
+                    <ul class="list-unstyled">
+                        {% for explanation in recommendations.explanations %}
+                            <li class="mb-1">
+                                <i class="fas fa-check text-success me-2"></i>
+                                {{ explanation }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

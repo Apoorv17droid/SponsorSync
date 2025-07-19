@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title or 'Create Event' }} - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-plus-circle text-primary me-2"></i>
+                    {{ title or 'Create New Event' }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control") }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.name.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.theme.label(class="form-label") }}
+                                {{ form.theme(class="form-control") }}
+                                {% if form.theme.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.theme.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4") }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.description.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.event_date.label(class="form-label") }}
+                                {{ form.event_date(class="form-control") }}
+                                {% if form.event_date.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.event_date.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.location.label(class="form-label") }}
+                                {{ form.location(class="form-control") }}
+                                {% if form.location.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.location.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.expected_footfall.label(class="form-label") }}
+                                {{ form.expected_footfall(class="form-control") }}
+                                {% if form.expected_footfall.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.expected_footfall.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.target_audience.label(class="form-label") }}
+                                {{ form.target_audience(class="form-control") }}
+                                {% if form.target_audience.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.target_audience.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">e.g., "College students aged 18-25, tech enthusiasts"</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.sponsor_requirements.label(class="form-label") }}
+                        {{ form.sponsor_requirements(class="form-control", rows="3") }}
+                        {% if form.sponsor_requirements.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.sponsor_requirements.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Describe what you're looking for from sponsors</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.monetary_requirement.label(class="form-label") }}
+                                {{ form.monetary_requirement(class="form-control") }}
+                                {% if form.monetary_requirement.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.monetary_requirement.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">e.g., "$5,000 - $10,000"</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.material_requirement.label(class="form-label") }}
+                                {{ form.material_requirement(class="form-control") }}
+                                {% if form.material_requirement.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.material_requirement.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">e.g., "Banners, merchandise"</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.marketing_requirement.label(class="form-label") }}
+                                {{ form.marketing_requirement(class="form-control") }}
+                                {% if form.marketing_requirement.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.marketing_requirement.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">e.g., "Social media promotion"</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.past_engagement_stats.label(class="form-label") }}
+                        {{ form.past_engagement_stats(class="form-control", rows="3") }}
+                        {% if form.past_engagement_stats.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.past_engagement_stats.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Share statistics from previous events to build credibility</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.tags.label(class="form-label") }}
+                        {{ form.tags(class="form-control") }}
+                        {% if form.tags.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.tags.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">e.g., "technology, innovation, startup, networking, hackathon"</div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('club_dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}{{ sponsor.company_name }} - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Sponsor Details Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-building text-warning me-2"></i>
+                    {{ sponsor.company_name }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <!-- Company Info -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-industry me-2"></i>Industry:</strong> {{ sponsor.industry|title }}</p>
+                        <p><strong><i class="fas fa-map-marker-alt me-2"></i>Location:</strong> {{ sponsor.location }}</p>
+                        {% if sponsor.website %}
+                            <p><strong><i class="fas fa-globe me-2"></i>Website:</strong> 
+                                <a href="{{ sponsor.website }}" target="_blank" class="text-decoration-none">
+                                    {{ sponsor.website }}
+                                    <i class="fas fa-external-link-alt ms-1"></i>
+                                </a>
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        {% if sponsor.budget_range %}
+                            <p><strong><i class="fas fa-dollar-sign me-2"></i>Budget Range:</strong> 
+                                {{ sponsor.budget_range.replace('_', ' ')|title }}
+                            </p>
+                        {% endif %}
+                        {% if sponsor.contact_person %}
+                            <p><strong><i class="fas fa-user me-2"></i>Contact Person:</strong> {{ sponsor.contact_person }}</p>
+                        {% endif %}
+                        {% if sponsor.phone %}
+                            <p><strong><i class="fas fa-phone me-2"></i>Phone:</strong> {{ sponsor.phone }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Company Description -->
+                {% if sponsor.description %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-info-circle me-2"></i>About {{ sponsor.company_name }}</h5>
+                        <p>{{ sponsor.description }}</p>
+                    </div>
+                {% endif %}
+                
+                <!-- Target Demographics -->
+                {% if sponsor.target_demographics %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-bullseye me-2"></i>Target Demographics</h5>
+                        <p>{{ sponsor.target_demographics }}</p>
+                    </div>
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    {% if current_user.user_type == 'club' %}
+                        <a href="{{ url_for('send_message', recipient_id=sponsor.user.id) }}" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i>Contact Sponsor
+                        </a>
+                    {% endif %}
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Industry Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Industry Focus
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    {% set industry_icons = {
+                        'technology': 'fas fa-laptop-code',
+                        'finance': 'fas fa-chart-line',
+                        'healthcare': 'fas fa-heartbeat',
+                        'education': 'fas fa-graduation-cap',
+                        'entertainment': 'fas fa-film',
+                        'food_beverage': 'fas fa-utensils',
+                        'automotive': 'fas fa-car',
+                        'retail': 'fas fa-shopping-cart',
+                        'sports': 'fas fa-running',
+                        'other': 'fas fa-building'
+                    } %}
+                    
+                    <i class="{{ industry_icons.get(sponsor.industry, 'fas fa-building') }} fa-3x text-warning mb-3"></i>
+                    <h5>{{ sponsor.industry|title }}</h5>
+                    
+                    {% if sponsor.budget_range %}
+                        <div class="mt-3">
+                            <small class="text-muted">Typical Budget Range</small>
+                            <div class="badge bg-success">{{ sponsor.budget_range.replace('_', ' ')|title }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Information -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-address-card me-2"></i>
+                    Contact Information
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if sponsor.contact_person %}
+                    <p class="mb-2">
+                        <i class="fas fa-user me-2"></i>
+                        <strong>{{ sponsor.contact_person }}</strong>
+                    </p>
+                {% endif %}
+                
+                {% if sponsor.phone %}
+                    <p class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        <a href="tel:{{ sponsor.phone }}" class="text-decoration-none">{{ sponsor.phone }}</a>
+                    </p>
+                {% endif %}
+                
+                <p class="mb-2">
+                    <i class="fas fa-envelope me-2"></i>
+                    <a href="mailto:{{ sponsor.user.email }}" class="text-decoration-none">{{ sponsor.user.email }}</a>
+                </p>
+                
+                {% if sponsor.website %}
+                    <p class="mb-2">
+                        <i class="fas fa-globe me-2"></i>
+                        <a href="{{ sponsor.website }}" target="_blank" class="text-decoration-none">
+                            Visit Website
+                            <i class="fas fa-external-link-alt ms-1"></i>
+                        </a>
+                    </p>
+                {% endif %}
+                
+                <div class="mt-3">
+                    {% if current_user.user_type == 'club' %}
+                        <a href="{{ url_for('send_message', recipient_id=sponsor.user.id) }}" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-envelope me-2"></i>Send Message
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

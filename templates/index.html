@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <!-- Hero Section -->
+        <div class="hero-section py-5">
+            <h1 class="display-4 fw-bold mb-4">
+                <i class="fas fa-handshake text-primary me-3"></i>
+                Welcome to SponsorSync
+            </h1>
+            <p class="lead mb-4">
+                The AI-powered platform connecting student clubs with sponsors for meaningful partnerships
+            </p>
+            
+            {% if not current_user.is_authenticated %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 me-md-2">
+                        <i class="fas fa-user-plus me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </div>
+            {% else %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5">
+    <div class="col-lg-10 mx-auto">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-star text-warning me-2"></i>
+            Platform Features
+        </h2>
+        
+        <div class="row g-4">
+            <!-- For Student Clubs -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-3x text-info"></i>
+                        </div>
+                        <h4 class="card-title">For Student Clubs</h4>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Create detailed event profiles
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Get AI-powered sponsor recommendations
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Communicate with potential sponsors
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Track sponsorship opportunities
+                            </li>
+                        </ul>
+                        {% if not current_user.is_authenticated %}
+                            <a href="{{ url_for('register') }}" class="btn btn-info">
+                                Join as Student Club
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- For Sponsors -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-building fa-3x text-warning"></i>
+                        </div>
+                        <h4 class="card-title">For Sponsors</h4>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Discover relevant student events
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Get matched with high-engagement opportunities
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Filter events by demographics and location
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Direct communication with organizers
+                            </li>
+                        </ul>
+                        {% if not current_user.is_authenticated %}
+                            <a href="{{ url_for('register') }}" class="btn btn-warning">
+                                Join as Sponsor
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Matching Section -->
+<div class="row mt-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <div class="card bg-primary bg-opacity-10 border-0">
+            <div class="card-body py-5">
+                <h3 class="mb-4">
+                    <i class="fas fa-brain text-primary me-2"></i>
+                    AI-Powered Matching
+                </h3>
+                <p class="mb-4">
+                    Our intelligent recommendation engine analyzes multiple factors to find the perfect matches:
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-tags fa-2x text-info mb-2"></i>
+                            <h6>Tag Similarity</h6>
+                            <small class="text-muted">Event themes match sponsor interests</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-users fa-2x text-success mb-2"></i>
+                            <h6>Audience Match</h6>
+                            <small class="text-muted">Target demographics alignment</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-map-marker-alt fa-2x text-warning mb-2"></i>
+                            <h6>Location Relevance</h6>
+                            <small class="text-muted">Geographic proximity consideration</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line fa-2x text-danger mb-2"></i>
+                            <h6>Engagement Metrics</h6>
+                            <small class="text-muted">Expected reach and impact</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row mt-5">
+    <div class="col-lg-10 mx-auto">
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <div class="card border-0 bg-transparent">
+                    <div class="card-body">
+                        <h2 class="text-primary">
+                            <i class="fas fa-university"></i>
+                        </h2>
+                        <h4>Student Clubs</h4>
+                        <p class="text-muted">Connect with sponsors for your events</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 bg-transparent">
+                    <div class="card-body">
+                        <h2 class="text-success">
+                            <i class="fas fa-handshake"></i>
+                        </h2>
+                        <h4>Smart Matching</h4>
+                        <p class="text-muted">AI-powered recommendations for best fit</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 bg-transparent">
+                    <div class="card-body">
+                        <h2 class="text-warning">
+                            <i class="fas fa-rocket"></i>
+                        </h2>
+                        <h4>Growth</h4>
+                        <p class="text-muted">Expand your reach and impact</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

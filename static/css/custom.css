@@ -1,0 +1,366 @@
+/* Custom CSS for SponsorSync - Complementing Bootstrap Dark Theme */
+
+/* Root variables for consistency with Bootstrap theme */
+:root {
+    --sponsor-sync-primary: var(--bs-primary);
+    --sponsor-sync-success: var(--bs-success);
+    --sponsor-sync-warning: var(--bs-warning);
+    --sponsor-sync-info: var(--bs-info);
+    --sponsor-sync-danger: var(--bs-danger);
+    --sponsor-sync-dark: var(--bs-dark);
+    --sponsor-sync-light: var(--bs-light);
+}
+
+/* Enhanced hero section styling */
+.hero-section {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.1) 0%, rgba(25, 135, 84, 0.1) 100%);
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    background: linear-gradient(45deg, var(--bs-primary), var(--bs-success));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+}
+
+/* Card enhancements */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced form controls */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button enhancements */
+.btn {
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--bs-primary), #4dabf7);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, var(--bs-primary));
+}
+
+.btn-success {
+    background: linear-gradient(45deg, var(--bs-success), #51cf66);
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #157347, var(--bs-success));
+}
+
+/* Badge styling */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+    border-radius: 6px;
+}
+
+/* Navigation enhancements */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar-brand:hover {
+    color: var(--bs-primary) !important;
+}
+
+.nav-link {
+    transition: color 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: var(--bs-primary) !important;
+}
+
+/* Alert styling */
+.alert {
+    border: none;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.alert-success {
+    background: rgba(25, 135, 84, 0.2);
+    color: #75b798;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.2);
+    color: #f5a2b2;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffda6a;
+}
+
+.alert-info {
+    background: rgba(13, 202, 240, 0.2);
+    color: #6edff6;
+}
+
+/* Dashboard enhancements */
+.dashboard-stat {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease-in-out;
+}
+
+.dashboard-stat:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.dashboard-stat i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Match score styling */
+.match-score {
+    background: linear-gradient(135deg, var(--bs-success), #51cf66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* Progress bar enhancements */
+.progress {
+    height: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, var(--bs-success), #51cf66);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+/* Message styling */
+.message-unread {
+    background: rgba(13, 110, 253, 0.1);
+    border-left: 4px solid var(--bs-primary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Event card styling */
+.event-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.event-card:hover {
+    border-color: var(--bs-primary);
+    box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2);
+}
+
+/* Sponsor card styling */
+.sponsor-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.sponsor-card:hover {
+    border-color: var(--bs-warning);
+    box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
+}
+
+/* Footer styling */
+footer {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--bs-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tag styling */
+.tag-cloud .badge {
+    margin: 0.25rem;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.tag-cloud .badge:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Search results styling */
+.search-result-item {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.search-result-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(45deg, var(--bs-primary), var(--bs-success));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.search-result-item:hover::before {
+    opacity: 1;
+}
+
+/* Profile completion indicator */
+.profile-completion {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(25, 135, 84, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.completion-bar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.completion-progress {
+    height: 100%;
+    background: linear-gradient(45deg, var(--bs-success), #51cf66);
+    border-radius: 10px;
+    transition: width 0.8s ease;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .dashboard-stat {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section h1 {
+        font-size: 1.75rem;
+    }
+    
+    .dashboard-stat i {
+        font-size: 2rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+}
+
+/* Accessibility enhancements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus indicators for better accessibility */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid var(--bs-light);
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}

@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+
+{% block title %}Search Events - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="fas fa-search text-primary me-2"></i>
+            Search Events
+        </h2>
+    </div>
+</div>
+
+<!-- Search Form -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter me-2"></i>
+                    Search Filters
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.keyword.label(class="form-label") }}
+                                {{ form.keyword(class="form-control", placeholder="e.g., tech, hackathon, innovation") }}
+                                {% if form.keyword.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.keyword.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Search in event name, description, theme, and tags</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                {{ form.location.label(class="form-label") }}
+                                {{ form.location(class="form-control", placeholder="e.g., New York, California") }}
+                                {% if form.location.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.location.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                {{ form.theme.label(class="form-label") }}
+                                {{ form.theme(class="form-control", placeholder="e.g., technology, business") }}
+                                {% if form.theme.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.theme.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form.min_footfall.label(class="form-label") }}
+                                {{ form.min_footfall(class="form-control", placeholder="e.g., 100") }}
+                                {% if form.min_footfall.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.min_footfall.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Minimum expected attendance</div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 d-flex align-items-end">
+                            <div class="d-flex gap-2">
+                                {{ form.submit(class="btn btn-primary") }}
+                                <a href="{{ url_for('search_events') }}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-1"></i>Clear
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Results -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    {% if events %}
+                        Search Results ({{ events|length }} {% if events|length == 1 %}event{% else %}events{% endif %})
+                    {% else %}
+                        All Events
+                    {% endif %}
+                </h5>
+                {% if events and events|length > 0 and events[0].score is defined %}
+                    <small class="text-muted">
+                        <i class="fas fa-brain me-1"></i>
+                        Sorted by AI match score
+                    </small>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if events %}
+                    {% if events|length > 0 and events[0].score is defined %}
+                        <!-- Events with AI scores -->
+                        {% for event_data in events %}
+                            <div class="border rounded p-4 mb-4 position-relative">
+                                <!-- Match Score Badge -->
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-success fs-6">{{ event_data.percentage }}% match</span>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <h5>
+                                            <a href="{{ url_for('event_details', event_id=event_data.event.id) }}" 
+                                               class="text-decoration-none">
+                                                {{ event_data.event.name }}
+                                            </a>
+                                        </h5>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <p class="text-muted small mb-1">
+                                                    <i class="fas fa-users me-1"></i>
+                                                    {{ event_data.event.club.club_name }} - {{ event_data.event.club.university }}
+                                                </p>
+                                                <p class="text-muted small mb-1">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    {% if event_data.event.event_date %}{{ event_data.event.event_date.strftime('%B %d, %Y') }}{% else %}Date TBD{% endif %}
+                                                </p>
+                                                <p class="text-muted small mb-1">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                                    {{ event_data.event.location or 'Location TBD' }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if event_data.event.theme %}
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fas fa-tag me-1"></i>
+                                                        {{ event_data.event.theme }}
+                                                    </p>
+                                                {% endif %}
+                                                {% if event_data.event.expected_footfall %}
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fas fa-eye me-1"></i>
+                                                        Expected: {{ event_data.event.expected_footfall }} attendees
+                                                    </p>
+                                                {% endif %}
+                                                {% if event_data.event.target_audience %}
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fas fa-bullseye me-1"></i>
+                                                        {{ event_data.event.target_audience }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        {% if event_data.event.description %}
+                                            <p class="mb-3">{{ event_data.event.description[:200] }}{% if event_data.event.description|length > 200 %}...{% endif %}</p>
+                                        {% endif %}
+                                        
+                                        <!-- Sponsor Requirements Preview -->
+                                        {% if event_data.event.monetary_requirement or event_data.event.material_requirement or event_data.event.marketing_requirement %}
+                                            <div class="mb-3">
+                                                <small class="text-muted fw-bold">Sponsor Requirements:</small>
+                                                <div class="row mt-1">
+                                                    {% if event_data.event.monetary_requirement %}
+                                                        <div class="col-auto">
+                                                            <span class="badge bg-success">
+                                                                <i class="fas fa-dollar-sign me-1"></i>{{ event_data.event.monetary_requirement }}
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if event_data.event.material_requirement %}
+                                                        <div class="col-auto">
+                                                            <span class="badge bg-info">
+                                                                <i class="fas fa-box me-1"></i>Materials
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if event_data.event.marketing_requirement %}
+                                                        <div class="col-auto">
+                                                            <span class="badge bg-warning">
+                                                                <i class="fas fa-bullhorn me-1"></i>Marketing
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <!-- Tags -->
+                                        {% if event_data.event.tags %}
+                                            <div class="mb-3">
+                                                {% set tags = event_data.event.tags.split(',') %}
+                                                {% for tag in tags[:5] %}
+                                                    <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
+                                                {% endfor %}
+                                                {% if tags|length > 5 %}
+                                                    <span class="badge bg-secondary">+{{ tags|length - 5 }} more</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-lg-4 text-lg-end">
+                                        <div class="d-flex flex-column gap-2">
+                                            <a href="{{ url_for('event_details', event_id=event_data.event.id) }}" 
+                                               class="btn btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>View Details
+                                            </a>
+                                            <a href="{{ url_for('express_interest', event_id=event_data.event.id) }}" 
+                                               class="btn btn-success">
+                                                <i class="fas fa-heart me-1"></i>Express Interest
+                                            </a>
+                                            <a href="{{ url_for('send_message', recipient_id=event_data.event.club.user.id) }}" 
+                                               class="btn btn-secondary">
+                                                <i class="fas fa-envelope me-1"></i>Contact Club
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Events without AI scores -->
+                        {% for event in events %}
+                            <div class="border rounded p-4 mb-4">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <h5>
+                                            <a href="{{ url_for('event_details', event_id=event.id) }}" 
+                                               class="text-decoration-none">
+                                                {{ event.name }}
+                                            </a>
+                                        </h5>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <p class="text-muted small mb-1">
+                                                    <i class="fas fa-users me-1"></i>
+                                                    {{ event.club.club_name }} - {{ event.club.university }}
+                                                </p>
+                                                <p class="text-muted small mb-1">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    {% if event.event_date %}{{ event.event_date.strftime('%B %d, %Y') }}{% else %}Date TBD{% endif %}
+                                                </p>
+                                                <p class="text-muted small mb-1">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                                    {{ event.location or 'Location TBD' }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if event.theme %}
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fas fa-tag me-1"></i>
+                                                        {{ event.theme }}
+                                                    </p>
+                                                {% endif %}
+                                                {% if event.expected_footfall %}
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fas fa-eye me-1"></i>
+                                                        Expected: {{ event.expected_footfall }} attendees
+                                                    </p>
+                                                {% endif %}
+                                                {% if event.target_audience %}
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fas fa-bullseye me-1"></i>
+                                                        {{ event.target_audience }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        {% if event.description %}
+                                            <p class="mb-3">{{ event.description[:200] }}{% if event.description|length > 200 %}...{% endif %}</p>
+                                        {% endif %}
+                                        
+                                        <!-- Tags -->
+                                        {% if event.tags %}
+                                            <div class="mb-3">
+                                                {% set tags = event.tags.split(',') %}
+                                                {% for tag in tags[:5] %}
+                                                    <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
+                                                {% endfor %}
+                                                {% if tags|length > 5 %}
+                                                    <span class="badge bg-secondary">+{{ tags|length - 5 }} more</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-lg-4 text-lg-end">
+                                        <div class="d-flex flex-column gap-2">
+                                            <a href="{{ url_for('event_details', event_id=event.id) }}" 
+                                               class="btn btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>View Details
+                                            </a>
+                                            <a href="{{ url_for('express_interest', event_id=event.id) }}" 
+                                               class="btn btn-success">
+                                                <i class="fas fa-heart me-1"></i>Express Interest
+                                            </a>
+                                            <a href="{{ url_for('send_message', recipient_id=event.club.user.id) }}" 
+                                               class="btn btn-secondary">
+                                                <i class="fas fa-envelope me-1"></i>Contact Club
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No events found</h5>
+                        {% if request.method == 'POST' %}
+                            <p class="text-muted">Try adjusting your search criteria.</p>
+                            <a href="{{ url_for('search_events') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Clear Search
+                            </a>
+                        {% else %}
+                            <p class="text-muted">Use the search form above to find events that match your interests.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Tips -->
+{% if not events or events|length == 0 %}
+<div class="row mt-4">
+    <div class="col-lg-8 mx-auto">
+        <div class="card bg-primary bg-opacity-10 border-0">
+            <div class="card-body">
+                <h5 class="text-center mb-3">
+                    <i class="fas fa-lightbulb text-primary me-2"></i>
+                    Search Tips
+                </h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Use broad keywords like "tech", "business", "cultural"
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Search by city or state for location-specific events
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Filter by minimum attendance for larger events
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Complete your profile for better AI recommendations
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

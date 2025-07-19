@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Club Dashboard - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="fas fa-users text-info me-2"></i>
+                Club Dashboard
+            </h2>
+            <a href="{{ url_for('create_event') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i>Create New Event
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Overview -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-id-card me-2"></i>
+                    Club Profile
+                </h5>
+                <a href="{{ url_for('create_club_profile') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-edit me-1"></i>Edit Profile
+                </a>
+            </div>
+            <div class="card-body">
+                {% if club_profile %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Club Name:</strong> {{ club_profile.club_name }}</p>
+                            <p><strong>University:</strong> {{ club_profile.university }}</p>
+                            <p><strong>Location:</strong> {{ club_profile.location }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Contact Person:</strong> {{ club_profile.contact_person or 'Not specified' }}</p>
+                            <p><strong>Phone:</strong> {{ club_profile.phone or 'Not specified' }}</p>
+                        </div>
+                    </div>
+                    {% if club_profile.description %}
+                        <p><strong>Description:</strong> {{ club_profile.description }}</p>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center">
+                        <p class="text-muted">Complete your club profile to get started.</p>
+                        <a href="{{ url_for('create_club_profile') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Complete Profile
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Events and Recommendations -->
+<div class="row">
+    <!-- Events List -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Your Events ({{ events|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if events %}
+                    {% for event in events %}
+                        <div class="border-bottom pb-3 mb-3">
+                            <h6>
+                                <a href="{{ url_for('event_details', event_id=event.id) }}" class="text-decoration-none">
+                                    {{ event.name }}
+                                </a>
+                            </h6>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-calendar me-1"></i>
+                                {% if event.event_date %}{{ event.event_date.strftime('%B %d, %Y') }}{% else %}Date TBD{% endif %}
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ event.location or 'Location TBD' }}
+                            </p>
+                            {% if event.expected_footfall %}
+                                <p class="text-muted small mb-0">
+                                    <i class="fas fa-users me-1"></i>
+                                    Expected: {{ event.expected_footfall }} attendees
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No events created yet.</p>
+                        <a href="{{ url_for('create_event') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Create Your First Event
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- AI Recommendations -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-brain text-primary me-2"></i>
+                    AI Sponsor Recommendations
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recommendations %}
+                    {% for rec in recommendations %}
+                        <div class="mb-4">
+                            <h6 class="text-primary">{{ rec.event.name }}</h6>
+                            {% if rec.sponsors %}
+                                {% for sponsor_rec in rec.sponsors %}
+                                    <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                                        <div>
+                                            <span class="fw-bold">{{ sponsor_rec.sponsor.company_name }}</span>
+                                            <div class="text-muted small">{{ sponsor_rec.sponsor.industry|title }}</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="badge bg-success">{{ sponsor_rec.percentage }}% match</div>
+                                            <div>
+                                                <a href="{{ url_for('sponsor_details', sponsor_id=sponsor_rec.sponsor.id) }}" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    View
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted small">No sponsor recommendations available.</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center">
+                        <i class="fas fa-lightbulb fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Create events to get AI-powered sponsor recommendations.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Messages -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-envelope me-2"></i>
+                    Recent Messages
+                </h5>
+                <a href="{{ url_for('messages') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-eye me-1"></i>View All
+                </a>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                            <div>
+                                <h6 class="mb-1">{{ message.subject }}</h6>
+                                <p class="text-muted small mb-0">
+                                    From: {{ message.sender.username }}
+                                    <span class="ms-2">{{ message.created_at.strftime('%B %d, %Y') }}</span>
+                                </p>
+                            </div>
+                            <div>
+                                {% if not message.read %}
+                                    <span class="badge bg-primary">New</span>
+                                {% endif %}
+                                <a href="{{ url_for('mark_message_read', message_id=message.id) }}" 
+                                   class="btn btn-sm btn-outline-secondary">
+                                    Read
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No messages yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

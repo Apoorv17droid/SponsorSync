@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Messages - SponsorSync{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="fas fa-envelope text-primary me-2"></i>
+            Messages
+        </h2>
+    </div>
+</div>
+
+<!-- Message Form (if recipient is specified) -->
+{% if form and recipient %}
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        Send Message to {{ recipient.username }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.subject.label(class="form-label") }}
+                            {{ form.subject(class="form-control") }}
+                            {% if form.subject.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.subject.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.content.label(class="form-label") }}
+                            {{ form.content(class="form-control", rows="6") }}
+                            {% if form.content.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.content.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('messages') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Messages Tabs -->
+<div class="row">
+    <div class="col-12">
+        <ul class="nav nav-tabs" id="messagesTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button" role="tab">
+                    <i class="fas fa-inbox me-2"></i>
+                    Received ({{ received_messages|length }})
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button" role="tab">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Sent ({{ sent_messages|length }})
+                </button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="messagesTabContent">
+            <!-- Received Messages -->
+            <div class="tab-pane fade show active" id="received" role="tabpanel">
+                <div class="card border-top-0">
+                    <div class="card-body">
+                        {% if received_messages %}
+                            {% for message in received_messages %}
+                                <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3 
+                                    {% if not message.read %}bg-light bg-opacity-50 p-3 rounded{% endif %}">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <h6 class="mb-0 me-2">{{ message.subject }}</h6>
+                                            {% if not message.read %}
+                                                <span class="badge bg-primary">New</span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-user me-1"></i>
+                                            From: {{ message.sender.username }}
+                                            {% if message.sender.user_type == 'club' and message.sender.club_profile %}
+                                                ({{ message.sender.club_profile.club_name }})
+                                            {% elif message.sender.user_type == 'sponsor' and message.sender.sponsor_profile %}
+                                                ({{ message.sender.sponsor_profile.company_name }})
+                                            {% endif %}
+                                        </p>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ message.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                        </p>
+                                        <p class="mb-0">{{ message.content[:150] }}{% if message.content|length > 150 %}...{% endif %}</p>
+                                    </div>
+                                    <div class="ms-3">
+                                        {% if not message.read %}
+                                            <a href="{{ url_for('mark_message_read', message_id=message.id) }}" 
+                                               class="btn btn-sm btn-primary mb-2">
+                                                <i class="fas fa-eye me-1"></i>Mark Read
+                                            </a>
+                                        {% endif %}
+                                        <a href="{{ url_for('send_message', recipient_id=message.sender_id) }}" 
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-reply me-1"></i>Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No received messages</h5>
+                                <p class="text-muted">Messages from other users will appear here.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sent Messages -->
+            <div class="tab-pane fade" id="sent" role="tabpanel">
+                <div class="card border-top-0">
+                    <div class="card-body">
+                        {% if sent_messages %}
+                            {% for message in sent_messages %}
+                                <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-2">{{ message.subject }}</h6>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-user me-1"></i>
+                                            To: {{ message.recipient.username }}
+                                            {% if message.recipient.user_type == 'club' and message.recipient.club_profile %}
+                                                ({{ message.recipient.club_profile.club_name }})
+                                            {% elif message.recipient.user_type == 'sponsor' and message.recipient.sponsor_profile %}
+                                                ({{ message.recipient.sponsor_profile.company_name }})
+                                            {% endif %}
+                                        </p>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ message.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                        </p>
+                                        <p class="mb-0">{{ message.content[:150] }}{% if message.content|length > 150 %}...{% endif %}</p>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="text-end">
+                                            {% if message.read %}
+                                                <small class="text-success">
+                                                    <i class="fas fa-check-double me-1"></i>Read
+                                                </small>
+                                            {% else %}
+                                                <small class="text-muted">
+                                                    <i class="fas fa-check me-1"></i>Sent
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-paper-plane fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No sent messages</h5>
+                                <p class="text-muted">Messages you send will appear here.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
