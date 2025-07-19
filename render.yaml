@@ -1,0 +1,9 @@
+services:
+- type: web
+  name: SponsorSync
+  env: python
+  buildCommand: "poetry install"
+  startCommand: "poetry run python app.py"
+  envVars:
+    - key: FLASK_ENV
+      value: production
