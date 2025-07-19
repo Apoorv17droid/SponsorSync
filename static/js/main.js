@@ -253,23 +253,42 @@ function initializeMessageSystem() {
             const truncated = content.textContent.substring(0, 150) + '...';
             const full = content.textContent;
             
-            content.innerHTML = truncated + ' <button type="button" class="btn btn-link btn-sm p-0 text-primary">Read more</button>';
+            // Clear content and add truncated text safely
+            content.textContent = truncated + ' ';
+            const readMoreBtn = document.createElement('button');
+            readMoreBtn.type = 'button';
+            readMoreBtn.className = 'btn btn-link btn-sm p-0 text-primary';
+            readMoreBtn.textContent = 'Read more';
+            content.appendChild(readMoreBtn);
             
-            const readMoreBtn = content.querySelector('button');
             let expanded = false;
             
             readMoreBtn.addEventListener('click', function() {
                 if (!expanded) {
-                    content.innerHTML = full + ' <button type="button" class="btn btn-link btn-sm p-0 text-primary">Show less</button>';
+                    // Clear content and add full text safely
+                    content.textContent = full + ' ';
+                    const showLessBtn = document.createElement('button');
+                    showLessBtn.type = 'button';
+                    showLessBtn.className = 'btn btn-link btn-sm p-0 text-primary';
+                    showLessBtn.textContent = 'Show less';
+                    content.appendChild(showLessBtn);
                     expanded = true;
+                    
+                    // Attach event to new button
+                    showLessBtn.addEventListener('click', arguments.callee);
                 } else {
-                    content.innerHTML = truncated + ' <button type="button" class="btn btn-link btn-sm p-0 text-primary">Read more</button>';
+                    // Clear content and add truncated text safely
+                    content.textContent = truncated + ' ';
+                    const readMoreBtn = document.createElement('button');
+                    readMoreBtn.type = 'button';
+                    readMoreBtn.className = 'btn btn-link btn-sm p-0 text-primary';
+                    readMoreBtn.textContent = 'Read more';
+                    content.appendChild(readMoreBtn);
                     expanded = false;
+                    
+                    // Attach event to new button
+                    readMoreBtn.addEventListener('click', arguments.callee);
                 }
-                
-                // Re-attach event listener to the new button
-                const newBtn = content.querySelector('button');
-                newBtn.addEventListener('click', arguments.callee);
             });
         }
     });
