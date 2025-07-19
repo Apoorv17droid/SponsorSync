@@ -107,7 +107,7 @@ function initializeLoadingStates() {
  * Show loading state on button
  */
 function showLoadingState(button) {
-    const originalText = button.innerHTML;
+    const originalContent = button.cloneNode(true);
     const originalDisabled = button.disabled;
     
     button.disabled = true;
@@ -116,7 +116,11 @@ function showLoadingState(button) {
     // Reset after 10 seconds as fallback
     setTimeout(function() {
         button.disabled = originalDisabled;
-        button.innerHTML = originalText;
+        // Safely restore original content by replacing child nodes
+        button.innerHTML = '';
+        while (originalContent.firstChild) {
+            button.appendChild(originalContent.firstChild);
+        }
     }, 10000);
 }
 
