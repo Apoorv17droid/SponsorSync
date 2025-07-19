@@ -51,6 +51,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI'
 
 if not app.config['SQLALCHEMY_DATABASE_URI']:
     raise RuntimeError("Missing SQLALCHEMY_DATABASE_URI env variable")
+    
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import os
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+
+db = SQLAlchemy()
+db.init_app(app)
 
 db.init_app(app)
 
