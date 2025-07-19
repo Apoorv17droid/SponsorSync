@@ -45,3 +45,12 @@ with app.app_context():
 
 # Import routes after app initialization
 import routes
+import os
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+
+if not app.config['SQLALCHEMY_DATABASE_URI']:
+    raise RuntimeError("Missing SQLALCHEMY_DATABASE_URI env variable")
+
+db.init_app(app)
+
